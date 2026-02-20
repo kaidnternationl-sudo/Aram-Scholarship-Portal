@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>منصة التقديم للمنح التركية | مجموعة آرام + المكتب العربي</title>
+  <!-- Favicon (emoji-based) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts (Cairo) -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Cairo', sans-serif; }
+    .drag-area {
+      border: 2px dashed #cbd5e0;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      text-align: center;
+      background: #f8fafc;
+      transition: border 0.3s, background 0.3s;
+      cursor: pointer;
+    }
+    .drag-area.dragover {
+      border-color: #1E40AF;
+      background: #eff6ff;
+    }
+    .file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f1f5f9;
+      padding: 0.3rem 0.8rem;
+      border-radius: 9999px;
+      margin: 0.2rem 0;
+      font-size: 0.9rem;
+    }
+    .file-item .delete-file {
+      color: #dc2626;
+      cursor: pointer;
+      font-weight: bold;
+      margin-right: 0.5rem;
+    }
+    .error-message {
+      color: #dc2626;
+      font-size: 0.8rem;
+      margin-top: 0.2rem;
+      display: none;
+    }
+    input.error, select.error, textarea.error {
+      border-color: #dc2626;
+    }
+    .step:not(.active) {
+      display: none;
+    }
+    .progress-bar {
+      transition: width 0.3s ease;
+    }
+    #success-page {
+      display: none;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- ========== HEADER with text logos ========== -->
+  <header class="bg-white shadow-sm sticky top-0 z-10">
+    <div class="container mx-auto px-4 py-3 flex flex-wrap items-center justify-between">
+      <div class="flex items-center gap-6">
+        <!-- ARAM text logo -->
+        <div class="text-2xl font-black text-blue-900 border-l-4 border-blue-600 pl-3 leading-8">ARAM</div>
+        <!-- Al-Maktab text logo with gradient -->
+        <div class="text-xl font-bold bg-gradient-to-l from-green-700 to-green-500 text-transparent bg-clip-text">المكتب العربي</div>
+      </div>
+      <div class="text-center">
+        <h1 class="text-xl md:text-2xl font-bold text-gray-800">التسجيل على المنحة التركية</h1>
+        <p class="text-sm text-gray-500">العام الدراسي 2026 - 2027</p>
+      </div>
+      <div class="bg-red-100 text-red-700 px-4 py-2 rounded-full text-sm font-semibold">
+        ⏳ آخر موعد: <span id="countdown">20/02/2026</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-8 max-w-5xl">
+
+    <!-- ========== COUNTDOWN BANNER ========== -->
+    <section class="bg-gradient-to-l from-blue-800 to-indigo-800 text-white rounded-2xl p-8 mb-12 text-center shadow-lg">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">منحة دراسية في تركيا</h2>
+      <p class="text-xl mb-6">سجل الآن واستفد من المزايا الحصرية</p>
+      <div class="flex justify-center gap-4 text-2xl font-mono" id="countdown-timer">
+        <span class="bg-white text-blue-700 px-4 py-2 rounded-lg">00</span>:
+        <span class="bg-white text-blue-700 px-4 py-2 rounded-lg">00</span>:
+        <span class="bg-white text-blue-700 px-4 py-2 rounded-lg">00</span>
+      </div>
+      <p class="mt-4 text-sm opacity-90">يوم : ساعة : دقيقة</p>
+    </section>
+
+    <!-- ========== FEATURES CARDS ========== -->
+    <section class="mb-12">
+      <h3 class="text-2xl font-bold mb-6 text-gray-800">✨ مميزات المنحة</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-white p-4 rounded-xl shadow text-center transition transform hover:scale-105 hover:shadow-md"><i class="fas fa-university text-3xl text-blue-600 mb-2"></i><p class="font-semibold">مقعد جامعي مجاني</p></div>
+        <div class="bg-white p-4 rounded-xl shadow text-center transition transform hover:scale-105 hover:shadow-md"><i class="fas fa-money-bill-wave text-3xl text-green-600 mb-2"></i><p class="font-semibold">راتب شهري</p><p class="text-sm text-gray-600">بكالوريوس 4500₺<br>ماجستير 6500₺<br>دكتوراه 9000₺</p></div>
+        <div class="bg-white p-4 rounded-xl shadow text-center transition transform hover:scale-105 hover:shadow-md"><i class="fas fa-hospital text-3xl text-red-600 mb-2"></i><p class="font-semibold">تأمين صحي</p></div>
+        <div class="bg-white p-4 rounded-xl shadow text-center transition transform hover:scale-105 hover:shadow-md"><i class="fas fa-home text-3xl text-yellow-600 mb-2"></i><p class="font-semibold">سكن جامعي</p></div>
+        <div class="bg-white p-4 rounded-xl shadow text-center transition transform hover:scale-105 hover:shadow-md"><i class="fas fa-plane text-3xl text-purple-600 mb-2"></i><p class="font-semibold">تذكرة طيران</p></div>
+        <div class="bg-white p-4 rounded-xl shadow text-center transition transform hover:scale-105 hover:shadow-md"><i class="fas fa-language text-3xl text-indigo-600 mb-2"></i><p class="font-semibold">دراسة لغة مجانية</p></div>
+        <div class="bg-white p-4 rounded-xl shadow text-center transition transform hover:scale-105 hover:shadow-md"><i class="fas fa-credit-card text-3xl text-pink-600 mb-2"></i><p class="font-semibold">تغطية الرسوم</p></div>
+        <div class="bg-white p-4 rounded-xl shadow text-center transition transform hover:scale-105 hover:shadow-md"><i class="fas fa-file-invoice text-3xl text-gray-600 mb-2"></i><p class="font-semibold">رسوم التسجيل: 300 ريال</p></div>
+      </div>
+    </section>
+
+    <!-- ========== CONDITIONS ========== -->
+    <section class="mb-12 bg-white p-6 rounded-2xl shadow">
+      <h3 class="text-2xl font-bold mb-4 text-gray-800">📋 شروط التقديم</h3>
+      <ul class="space-y-2">
+        <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1"></i><span>أجنبي (لا يحمل الجنسية التركية).</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1"></i><span>العمر: لا يتجاوز 21 (بكالوريوس)، 30 (ماجستير)، 35 (دكتوراه).</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1"></i><span>لا يوجد قيد فعّال في جامعة تركية (يُستثنى قيد السنة التحضيرية).</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1"></i><span>المعدل: 70% كحد أدنى (90% للتخصصات الطبية: طب، أسنان، صيدلة). 75% للدراسات العليا.</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1"></i><span>لائق صحياً ولا يعاني من مشاكل تعيق إكمال الدراسة.</span></li>
+      </ul>
+    </section>
+
+    <!-- ========== DOCUMENTS TABS ========== -->
+    <section class="mb-12">
+      <h3 class="text-2xl font-bold mb-4 text-gray-800">📎 الأوراق المطلوبة</h3>
+      <div class="border-b border-gray-200 mb-4">
+        <button id="tab-bachelor" class="tab-btn active px-4 py-2 font-semibold text-blue-600 border-b-2 border-blue-600">بكالوريوس</button>
+        <button id="tab-master" class="tab-btn px-4 py-2 font-semibold text-gray-500">دراسات عليا</button>
+      </div>
+      <div id="bachelor-docs" class="tab-content">
+        <ul class="list-disc list-inside bg-gray-50 p-4 rounded"><li>صورة شخصية</li><li>جواز سفر/إقامة</li><li>شهادة ثانوية وكشف علامات</li><li>شهادات لغة/توصية/تطوع (إن وجدت)</li></ul>
+      </div>
+      <div id="master-docs" class="tab-content hidden">
+        <ul class="list-disc list-inside bg-gray-50 p-4 rounded"><li>صورة شخصية</li><li>جواز سفر/إقامة</li><li>شهادة ثانوية وكشف علامات</li><li>شهادة التخرج (أو مصدقة)</li><li>كشف علامات الجامعة</li><li>شهادات لغة/توصية/تطوع (إن وجدت)</li></ul>
+      </div>
+    </section>
+
+    <!-- ========== MULTI-STEP FORM ========== -->
+    <section class="bg-white p-6 rounded-2xl shadow-lg mb-12" id="form-section">
+      <h2 class="text-2xl font-bold mb-2 text-gray-800">📝 نموذج التقديم</h2>
+      <p class="text-gray-600 mb-6">جميع الحقول ذات النجمة <span class="text-red-500">*</span> إجبارية</p>
+
+      <!-- Progress Bar -->
+      <div class="mb-6">
+        <div class="flex justify-between text-sm font-medium text-gray-600 mb-1">
+          <span>الخطوة 1/5</span> <span>الخطوة 2/5</span> <span>الخطوة 3/5</span> <span>الخطوة 4/5</span> <span>الخطوة 5/5</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2.5">
+          <div id="progress-bar" class="progress-bar bg-blue-600 h-2.5 rounded-full" style="width: 20%"></div>
+        </div>
+      </div>
+
+      <!-- FORM with actual Getform endpoint -->
+      <form id="application-form" action="https://forminit.com/f/1qxe8l7a88i" method="POST" enctype="multipart/form-data">
+        <!-- Hidden redirect field (optional) -->
+        <input type="hidden" name="_redirect" value="#success">
+
+        <!-- STEP 1 -->
+        <div id="step-1" class="step active space-y-4">
+          <h3 class="text-xl font-semibold">الخطوة 1: معلومات التسجيل الأساسية</h3>
+          <div>
+            <label class="block mb-1">البريد الإلكتروني <span class="text-red-500">*</span></label>
+            <input type="email" name="email" required class="w-full border rounded-lg p-2" placeholder="example@domain.com">
+            <div class="error-message" data-for="email"></div>
+          </div>
+          <div>
+            <label class="block mb-1">أريد التسجيل على درجة <span class="text-red-500">*</span></label>
+            <select id="degree-select" name="degree" required class="w-full border rounded-lg p-2">
+              <option value="">اختر...</option>
+              <option value="bachelor">بكالوريوس</option>
+              <option value="master">ماجستير</option>
+              <option value="phd">دكتوراه</option>
+            </select>
+            <div class="error-message" data-for="degree"></div>
+          </div>
+          <div class="flex justify-end mt-4">
+            <button type="button" class="next-btn bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">التالي</button>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div id="step-2" class="step space-y-4">
+          <h3 class="text-xl font-semibold">الخطوة 2: البيانات الشخصية (بالانجليزية كما في الجواز)</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div><label>الاسم الأول <span class="text-red-500">*</span></label><input type="text" name="first_name" required class="w-full border rounded-lg p-2"><div class="error-message" data-for="first_name"></div></div>
+            <div><label>الاسم الثاني (الأب) <span class="text-red-500">*</span></label><input type="text" name="father_name" required class="w-full border rounded-lg p-2"><div class="error-message" data-for="father_name"></div></div>
+            <div><label>الكنية (العائلة) <span class="text-red-500">*</span></label><input type="text" name="family_name" required class="w-full border rounded-lg p-2"><div class="error-message" data-for="family_name"></div></div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div><label>الجنس <span class="text-red-500">*</span></label><select name="gender" required class="w-full border rounded-lg p-2"><option value="">اختر</option><option>ذكر</option><option>أنثى</option></select><div class="error-message" data-for="gender"></div></div>
+            <div><label>الحالة المدنية <span class="text-red-500">*</span></label><select name="marital_status" required class="w-full border rounded-lg p-2"><option value="">اختر</option><option>أعزب</option><option>متزوج</option><option>مطلق/أرمل</option></select><div class="error-message" data-for="marital_status"></div></div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div><label>تاريخ الميلاد <span class="text-red-500">*</span></label><input type="date" name="birth_date" required class="w-full border rounded-lg p-2"><div class="error-message" data-for="birth_date"></div></div>
+            <div><label>محل الميلاد (الدولة والمحافظة) <span class="text-red-500">*</span></label><input type="text" name="birth_place" required class="w-full border rounded-lg p-2"><div class="error-message" data-for="birth_place"></div></div>
+          </div>
+          <div class="flex justify-between mt-4">
+            <button type="button" class="prev-btn bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400">السابق</button>
+            <button type="button" class="next-btn bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">التالي</button>
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div id="step-3" class="step space-y-4">
+          <h3 class="text-xl font-semibold">الخطوة 3: بيانات الهوية والتواصل</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div><label>نوع الوثيقة <span class="text-red-500">*</span></label><select name="id_type" required class="w-full border rounded-lg p-2"><option value="">اختر</option><option>بطاقة تعريف مدنية</option><option>جواز سفر</option></select><div class="error-message" data-for="id_type"></div></div>
+            <div><label>رقم الوثيقة <span class="text-red-500">*</span></label><input type="text" name="id_number" required class="w-full border rounded-lg p-2"><div class="error-message" data-for="id_number"></div></div>
+          </div>
+          <div><label>الجنسية <span class="text-red-500">*</span></label><input type="text" name="nationality" required class="w-full border rounded-lg p-2"><div class="error-message" data-for="nationality"></div></div>
+          <div><label>هل لديك جنسية ثانية؟</label>
+            <select id="second_nationality_select" name="has_second_nationality" class="w-full border rounded-lg p-2"><option value="no">لا</option><option value="yes">نعم</option></select>
+          </div>
+          <div id="second_nationality_field" class="hidden"><label>الجنسية الثانية</label><input type="text" name="second_nationality" class="w-full border rounded-lg p-2"></div>
+          <div><label>رقم الموبايل (WhatsApp) متضمناً مفتاح الدولة <span class="text-red-500">*</span></label>
+            <!-- dir="ltr" added for proper LTR input -->
+            <input type="tel" name="phone" required class="w-full border rounded-lg p-2" placeholder="+90..." dir="ltr">
+            <div class="error-message" data-for="phone"></div>
+          </div>
+          <div><label>العنوان الكامل <span class="text-red-500">*</span></label><textarea name="address" required class="w-full border rounded-lg p-2"></textarea><div class="error-message" data-for="address"></div></div>
+          <div><label>منذ متى تقيم بالعنوان الحالي؟ <span class="text-red-500">*</span></label><input type="text" name="address_duration" required class="w-full border rounded-lg p-2"><div class="error-message" data-for="address_duration"></div></div>
+          <div class="flex justify-between mt-4">
+            <button type="button" class="prev-btn bg-gray-300 text-gray-700 px-6 py-2 rounded-lg">السابق</button>
+            <button type="button" class="next-btn bg-blue-600 text-white px-6 py-2 rounded-lg">التالي</button>
+          </div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div id="step-4" class="step space-y-4">
+          <h3 class="text-xl font-semibold">الخطوة 4: البيانات العائلية والاجتماعية</h3>
+          <div><label>اسم الأم <span class="text-red-500">*</span></label><input type="text" name="mother_name" required class="w-full border rounded-lg p-2"><div class="error-message" data-for="mother_name"></div></div>
+          <div class="grid grid-cols-2 gap-4">
+            <div><label>هل والدتك على قيد الحياة؟</label><select name="mother_alive" class="w-full border rounded-lg p-2"><option>نعم</option><option>لا</option></select></div>
+            <div><label>هل والدك على قيد الحياة؟</label><select name="father_alive" class="w-full border rounded-lg p-2"><option>نعم</option><option>لا</option></select></div>
+          </div>
+          <div><label>عمل والدك (مع التخصص/مكان العمل)</label><input type="text" name="father_job" class="w-full border rounded-lg p-2"></div>
+          <div><label>عمل والدتك (مع التخصص/مكان العمل)</label><input type="text" name="mother_job" class="w-full border rounded-lg p-2"></div>
+          <div><label>متوسط الدخل الشهري للأسرة <span class="text-red-500">*</span></label>
+            <select name="family_income" required class="w-full border rounded-lg p-2"><option value="">اختر...</option><option>0-50$</option><option>50-100$</option><option>100-250$</option><option>250-500$</option><option>500-1000$</option><option>1500$ فما فوق</option></select>
+            <div class="error-message" data-for="family_income"></div>
+          </div>
+          <div><label>هل لديك أي نوع من العجز أو الإعاقة؟</label>
+            <select name="disability" class="w-full border rounded-lg p-2"><option>لا يوجد</option><option>اضطرابات النطق</option><option>إعاقة جسدية</option><option>إعاقة ذهنية</option></select>
+          </div>
+          <div class="flex justify-between mt-4">
+            <button type="button" class="prev-btn bg-gray-300 text-gray-700 px-6 py-2 rounded-lg">السابق</button>
+            <button type="button" class="next-btn bg-blue-600 text-white px-6 py-2 rounded-lg">التالي</button>
+          </div>
+        </div>
+
+        <!-- STEP 5: File Uploads -->
+        <div id="step-5" class="step space-y-4">
+          <h3 class="text-xl font-semibold">الخطوة 5: رفع المرفقات</h3>
+          <p class="text-sm text-gray-500">(صيغ PDF, JPG, PNG - الحد الأقصى 5MB لكل ملف)</p>
+          <div id="upload-fields-container" class="space-y-4"></div>
+          <div class="flex justify-between mt-4">
+            <button type="button" class="prev-btn bg-gray-300 text-gray-700 px-6 py-2 rounded-lg">السابق</button>
+            <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">إرسال الطلب</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- ========== SUCCESS PAGE ========== -->
+    <div id="success-page" class="bg-white p-10 rounded-2xl shadow-lg text-center hidden">
+      <i class="fas fa-check-circle text-6xl text-green-500 mb-4"></i>
+      <h2 class="text-3xl font-bold text-gray-800 mb-2">تم استلام طلبك بنجاح!</h2>
+      <p class="text-gray-600 mb-6">شكراً لتقديمك، سنتواصل معك قريباً عبر البريد الإلكتروني.</p>
+      <button onclick="location.reload()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">تقديم طلب جديد</button>
+    </div>
+  </main>
+
+  <footer class="bg-gray-800 text-white text-center py-4">
+    <p>جميع الحقوق محفوظة © 2026 | مجموعة آرام + المكتب العربي</p>
+  </footer>
+
+  <script>
+    (function() {
+      // ---------- COUNTDOWN ----------
+      function updateCountdown() {
+        const target = new Date('2026-02-20T23:59:59');
+        const now = new Date();
+        const diff = target - now;
+        if (diff <= 0) {
+          document.getElementById('countdown-timer').innerHTML = '<span class="text-red-600">انتهى التسجيل</span>';
+          return;
+        }
+        const days = Math.floor(diff / (1000*60*60*24));
+        const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+        const minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
+        const seconds = Math.floor((diff % (1000*60)) / 1000);
+        document.getElementById('countdown-timer').innerHTML = `
+          <span class="bg-white text-blue-700 px-4 py-2 rounded-lg">${days.toString().padStart(2,'0')}</span> :
+          <span class="bg-white text-blue-700 px-4 py-2 rounded-lg">${hours.toString().padStart(2,'0')}</span> :
+          <span class="bg-white text-blue-700 px-4 py-2 rounded-lg">${minutes.toString().padStart(2,'0')}</span> :
+          <span class="bg-white text-blue-700 px-4 py-2 rounded-lg">${seconds.toString().padStart(2,'0')}</span>
+        `;
+      }
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+
+      // ---------- TABS ----------
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      const bachelorDocs = document.getElementById('bachelor-docs');
+      const masterDocs = document.getElementById('master-docs');
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          tabBtns.forEach(b => { b.classList.remove('active', 'text-blue-600', 'border-blue-600'); b.classList.add('text-gray-500'); });
+          this.classList.add('active', 'text-blue-600', 'border-blue-600');
+          this.classList.remove('text-gray-500');
+          if (this.id === 'tab-bachelor') {
+            bachelorDocs.classList.remove('hidden');
+            masterDocs.classList.add('hidden');
+          } else {
+            masterDocs.classList.remove('hidden');
+            bachelorDocs.classList.add('hidden');
+          }
+        });
+      });
+
+      // ---------- SECOND NATIONALITY TOGGLE ----------
+      const secondNatSelect = document.getElementById('second_nationality_select');
+      const secondNatField = document.getElementById('second_nationality_field');
+      secondNatSelect.addEventListener('change', function() {
+        secondNatField.classList.toggle('hidden', this.value !== 'yes');
+      });
+
+      // ---------- MULTI-STEP FORM & VALIDATION ----------
+      const steps = document.querySelectorAll('.step');
+      const progressBar = document.getElementById('progress-bar');
+      const nextBtns = document.querySelectorAll('.next-btn');
+      const prevBtns = document.querySelectorAll('.prev-btn');
+      const degreeSelect = document.getElementById('degree-select');
+      const uploadContainer = document.getElementById('upload-fields-container');
+      let currentStep = 1;
+
+      function showStep(step) {
+        steps.forEach(s => s.classList.remove('active'));
+        document.getElementById(`step-${step}`).classList.add('active');
+        progressBar.style.width = `${step * 20}%`;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (step === 5) updateUploadFields();
+      }
+
+      function validateStep(step) {
+        const stepEl = document.getElementById(`step-${step}`);
+        const requiredFields = stepEl.querySelectorAll('[required]');
+        let isValid = true;
+
+        stepEl.querySelectorAll('.error-message').forEach(msg => msg.style.display = 'none');
+        stepEl.querySelectorAll('input, select, textarea').forEach(field => field.classList.remove('error'));
+
+        requiredFields.forEach(field => {
+          if (!field.value.trim()) {
+            isValid = false;
+            field.classList.add('error');
+            const errorDiv = stepEl.querySelector(`.error-message[data-for="${field.name}"]`);
+            if (errorDiv) {
+              errorDiv.textContent = 'هذا الحقل مطلوب';
+              errorDiv.style.display = 'block';
+            }
+          }
+        });
+        return isValid;
+      }
+
+      nextBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          if (validateStep(currentStep)) {
+            if (currentStep < 5) {
+              currentStep++;
+              showStep(currentStep);
+            }
+          }
+        });
+      });
+
+      prevBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          if (currentStep > 1) {
+            currentStep--;
+            showStep(currentStep);
+          }
+        });
+      });
+
+      // ---------- LOCALSTORAGE PERSISTENCE ----------
+      const form = document.getElementById('application-form');
+      const allInputs = form.querySelectorAll('input, select, textarea');
+      const STORAGE_KEY = 'scholarshipFormData';
+
+      function loadFromStorage() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          try {
+            const data = JSON.parse(saved);
+            allInputs.forEach(field => {
+              if (field.type !== 'file' && data[field.name] !== undefined) {
+                if (field.type === 'checkbox' || field.type === 'radio') {
+                  field.checked = (field.value === data[field.name]);
+                } else {
+                  field.value = data[field.name];
+                }
+              }
+            });
+            if (data.has_second_nationality === 'yes') secondNatField.classList.remove('hidden');
+          } catch (e) {}
+        }
+      }
+
+      function saveToStorage() {
+        const data = {};
+        allInputs.forEach(field => {
+          if (field.type !== 'file') {
+            if (field.type === 'checkbox' || field.type === 'radio') {
+              if (field.checked) data[field.name] = field.value;
+            } else {
+              data[field.name] = field.value;
+            }
+          }
+        });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      }
+
+      allInputs.forEach(field => {
+        if (field.type !== 'file') {
+          field.addEventListener('input', saveToStorage);
+          field.addEventListener('change', saveToStorage);
+        }
+      });
+      loadFromStorage();
+
+      // ---------- FILE UPLOAD MODULE ----------
+      function updateUploadFields() {
+        const degree = degreeSelect.value;
+        let fields = [];
+        if (degree === 'bachelor') {
+          fields = [
+            { name: 'photo', label: 'الصورة الشخصية', accept: 'image/*', multiple: false },
+            { name: 'passport', label: 'جواز السفر/الإقامة', accept: '.pdf,image/*', multiple: false },
+            { name: 'highschool', label: 'شهادة ثانوية + كشف علامات', accept: '.pdf', multiple: false },
+            { name: 'extras', label: 'شهادات إضافية (اختياري)', accept: '.pdf,image/*', multiple: true }
+          ];
+        } else {
+          fields = [
+            { name: 'photo', label: 'الصورة الشخصية', accept: 'image/*', multiple: false },
+            { name: 'passport', label: 'جواز السفر/الإقامة', accept: '.pdf,image/*', multiple: false },
+            { name: 'highschool', label: 'شهادة ثانوية', accept: '.pdf', multiple: false },
+            { name: 'bachelor_cert', label: 'شهادة البكالوريوس', accept: '.pdf', multiple: false },
+            { name: 'transcript', label: 'كشف علامات الجامعة', accept: '.pdf', multiple: false },
+            { name: 'extras', label: 'شهادات إضافية (اختياري)', accept: '.pdf,image/*', multiple: true }
+          ];
+        }
+
+        let html = '';
+        fields.forEach(f => {
+          html += `
+            <div class="file-upload-wrapper" data-name="${f.name}">
+              <label class="block mb-1 font-semibold">${f.label} ${f.multiple ? '(اختياري)' : '<span class="text-red-500">*</span>'}</label>
+              <div class="drag-area" data-for="${f.name}">📎 اسحب الملفات هنا أو اضغط للاختيار</div>
+              <input type="file" name="${f.name}" id="${f.name}" accept="${f.accept}" ${f.multiple ? 'multiple' : ''} class="hidden" ${f.multiple ? '' : 'required'}>
+              <div class="file-list" id="${f.name}-list"></div>
+              <div class="error-message" data-for="${f.name}"></div>
+            </div>
+          `;
+        });
+        uploadContainer.innerHTML = html;
+        initDragAndDrop();
+      }
+
+      function initDragAndDrop() {
+        document.querySelectorAll('.drag-area').forEach(area => {
+          const forId = area.dataset.for;
+          const fileInput = document.getElementById(forId);
+          if (!fileInput) return;
+
+          ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(event => {
+            area.addEventListener(event, (e) => e.preventDefault());
+          });
+          area.addEventListener('dragover', () => area.classList.add('dragover'));
+          area.addEventListener('dragleave', () => area.classList.remove('dragover'));
+          area.addEventListener('drop', (e) => {
+            area.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            handleFiles(fileInput, files);
+          });
+          area.addEventListener('click', () => fileInput.click());
+          fileInput.addEventListener('change', () => {
+            handleFiles(fileInput, fileInput.files);
+          });
+        });
+      }
+
+      function handleFiles(input, fileList) {
+        const wrapper = input.closest('.file-upload-wrapper');
+        const listContainer = document.getElementById(input.name + '-list');
+        const errorDiv = wrapper.querySelector('.error-message');
+        errorDiv.style.display = 'none';
+
+        const validFiles = [];
+        for (let file of fileList) {
+          if (file.size > 5 * 1024 * 1024) {
+            errorDiv.textContent = `الملف ${file.name} حجمه أكبر من 5 ميغابايت`;
+            errorDiv.style.display = 'block';
+            continue;
+          }
+          const type = file.type;
+          if (!type.match(/image\/(jpeg|png)|application\/pdf/)) {
+            errorDiv.textContent = `الملف ${file.name} بصيغة غير مدعومة (PDF, JPG, PNG فقط)`;
+            errorDiv.style.display = 'block';
+            continue;
+          }
+          validFiles.push(file);
+        }
+
+        if (validFiles.length === 0) {
+          input.value = '';
+          listContainer.innerHTML = '';
+          return;
+        }
+
+        const dataTransfer = new DataTransfer();
+        validFiles.forEach(f => dataTransfer.items.add(f));
+        input.files = dataTransfer.files;
+
+        let listHtml = '';
+        for (let i = 0; i < input.files.length; i++) {
+          const file = input.files[i];
+          listHtml += `
+            <div class="file-item">
+              <span>${file.name} (${(file.size/1024).toFixed(1)} KB)</span>
+              <span class="delete-file" data-input="${input.name}" data-index="${i}"><i class="fas fa-times-circle"></i></span>
+            </div>
+          `;
+        }
+        listContainer.innerHTML = listHtml;
+
+        listContainer.querySelectorAll('.delete-file').forEach(btn => {
+          btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const inputName = this.dataset.input;
+            const index = parseInt(this.dataset.index);
+            const fileInput = document.getElementById(inputName);
+            if (fileInput && fileInput.files) {
+              const dt = new DataTransfer();
+              const files = fileInput.files;
+              for (let i = 0; i < files.length; i++) {
+                if (i !== index) dt.items.add(files[i]);
+              }
+              fileInput.files = dt.files;
+              handleFiles(fileInput, fileInput.files);
+            }
+          });
+        });
+      }
+
+      // ---------- FORM SUBMISSION (fetch) ----------
+      const formSection = document.getElementById('form-section');
+      const successPage = document.getElementById('success-page');
+
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const step5 = document.getElementById('step-5');
+        const requiredFiles = step5.querySelectorAll('input[required]');
+        let filesValid = true;
+        step5.querySelectorAll('.error-message').forEach(msg => msg.style.display = 'none');
+        step5.querySelectorAll('input').forEach(inp => inp.classList.remove('error'));
+
+        requiredFiles.forEach(inp => {
+          if (inp.files.length === 0) {
+            filesValid = false;
+            inp.classList.add('error');
+            const errorDiv = step5.querySelector(`.error-message[data-for="${inp.name}"]`);
+            if (errorDiv) {
+              errorDiv.textContent = 'يرجى رفع ملف مطلوب';
+              errorDiv.style.display = 'block';
+            }
+          }
+        });
+
+        if (!filesValid) return;
+
+        const formData = new FormData(form);
+        formData.append('_redirect', '#success');
+
+        try {
+          const response = await fetch(form.action, {
+            method: 'POST',
+            body: formData
+          });
+          if (response.ok) {
+            formSection.style.display = 'none';
+            successPage.classList.remove('hidden');
+            localStorage.removeItem(STORAGE_KEY);
+          } else {
+            alert('حدث خطأ أثناء الإرسال. حاول مرة أخرى.');
+          }
+        } catch (error) {
+          alert('فشل الاتصال بالخادم.');
+        }
+      });
+
+      degreeSelect.addEventListener('change', function() {
+        if (currentStep === 5) updateUploadFields();
+      });
+    })();
+  </script>
+</body>
+</html>
